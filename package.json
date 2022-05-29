@@ -1,0 +1,32 @@
+{
+  "name": "grafana-labs-compass",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "grafana-toolkit plugin:build",
+    "test": "grafana-toolkit plugin:test",
+    "dev": "grafana-toolkit plugin:dev",
+    "watch": "grafana-toolkit plugin:dev --watch",
+    "sign": "grafana-toolkit plugin:sign",
+    "start": "yarn watch"
+  },
+  "author": " (zeyneppsena)",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@grafana/data": "latest",
+    "@grafana/toolkit": "latest",
+    "@grafana/ui": "latest",
+    "@types/mapbox-gl": "^2.6.1",
+    "emotion": "10.0.27"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "dependencies": {
+    "@types/d3": "^7.1.0",
+    "d3": "^7.3.0",
+    "mapbox-gl": "^2.7.0",
+    "react": "^17.0.2",
+    "react-d3-speedometer": "^1.0.1"
+  }
+}
