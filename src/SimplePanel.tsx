@@ -7,7 +7,8 @@ import "./styles.css";
 export interface compassData {
     gps: number,
     depth: number,
-    speed: number
+    speed: number,
+    wind: number,
 }
 
 interface Props extends PanelProps<SimpleOptions> {
@@ -16,24 +17,27 @@ interface Props extends PanelProps<SimpleOptions> {
 export const SimplePanel: React.FC<Props> = ({options, data, width, height}) => {
 
 
-    const [compassData, SetcompassData] = React.useState({
+    const [compassData, setCompassData] = React.useState({
         gps: Math.floor(Math.random() ),
         depth: Math.floor(Math.random() ),
-        speed: Math.floor(Math.random() )
+        speed: Math.floor(Math.random() ),
+        wind: Math.floor(Math.random() )
     })
     let interval: any;
     const d3Container = useRef(null);
     React.useEffect(() => {
         if (!interval)
             interval = setInterval(() => {
-                let {gps, depth, speed} = compassData;
+                let {gps, depth, speed,wind} = compassData;
                 gps = gps === 259 ? 0 : depth + 1;
                 depth = depth === 152 ? 0 : depth + 1;
                 speed = speed === 29 ? 0 : speed + 1;
-                SetcompassData({
+                wind = wind === 19 ? 0 : wind + 1;
+                setCompassData({
                     gps: gps,
                     depth: depth,
                     speed: speed,
+                    wind: wind
                 })
 
             }, 300);
@@ -158,6 +162,81 @@ export const SimplePanel: React.FC<Props> = ({options, data, width, height}) => 
                         .attr("stroke-width", 2)
                         .attr("x", radius + margin)
                         .attr("y", radius + margin * 2)
+
+                     let arrowPoints = [[0, 0], [0, 20], [20, 10]];
+
+                    face
+                        .append('defs')
+                        .append('marker')
+                        .attr('id', 'arrow')
+                        .attr('viewBox', [0, 0, 20, 20])
+                        .attr('refX', 10)
+                        .attr('refY', 10)
+                        .attr("fill", "yellow")
+                        .attr('markerWidth', 10)
+                        .attr('markerHeight', 10)
+                        .attr('orient', 'auto-start-reverse')
+                        .append('path')
+                        .attr('d', d3.line()(arrowPoints))
+                        .attr('stroke', 'black');
+
+                    face
+                        .append('path')
+                        .attr('d', d3.line()([[radius/2, -margin], [radius /3, -margin/2]]))
+                        .attr('stroke', 'yellow')
+                        .attr("fill", "yellow")
+                        .attr('marker-end', 'url(#arrow)')
+
+                    face.selectAll('.windLabel')
+                        .data(data)
+                        .enter()
+                        .append('text')
+                        .style('fill', 'white')
+                        .attr('class', 'windLabel')
+                        .style('font-size', 15)
+                        .attr('x', radius/4)
+                        .attr('y', -radius/3.5)
+                        .text(compassData.wind + " kts");
+
+
+                    face
+                        .append('defs')
+                        .append('marker')
+                        .attr('id', 'arrow2')
+                        .attr('viewBox', [0, 0, 20, 20])
+                        .attr('refX', 10)
+                        .attr('refY', 10)
+                        .attr("fill", "blue")
+                        .attr('markerWidth', 10)
+                        .attr('markerHeight', 10)
+                        .attr('orient', 'auto-start-reverse')
+                        .append('path')
+                        .attr('d', d3.line()(arrowPoints))
+                        .attr('stroke', 'black');
+
+                    face
+                        .append('path')
+                        .attr('d', d3.line()([[radius/2 - margin/1.5 , -margin], [radius /3 -margin/1.5, -margin/2]]))
+                        .attr('stroke', 'blue')
+                        .attr("fill", "blue")
+                        .attr('marker-end', 'url(#arrow2)')
+
+                    face.selectAll('.windLabel2')
+                        .data(data)
+                        .enter()
+                        .append('text')
+                        .style('fill', 'white')
+                        .attr('class', 'windLabel2')
+                        .style('font-size', 15)
+                        .attr('stroke', 'none')
+                        .attr('x', radius/2)
+                        .attr('y', -radius/3.5)
+                        .text(compassData.wind + " kts");
+
+
+
+
+
 
 
                     //degree box
